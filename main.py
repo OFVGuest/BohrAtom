@@ -67,9 +67,9 @@ class Button:
 # region functions definitions
 def hello_world():
     global var_quantum, orbit_radius, energia_electron, energia_foton
-    if var_quantum + num_orbits_to_skip < 5:
+    if var_quantum + num_orbits_to_skip < 7:
         var_quantum += num_orbits_to_skip
-        orbit_radius = (screen_height / 25) * var_quantum ** 2
+        orbit_radius = (screen_height / 50) * var_quantum ** 2
         energia_electron = -13.6 / var_quantum ** 2
 
 
@@ -78,7 +78,7 @@ def bye_world():
     energia_electron0 = energia_electron
     if var_quantum - num_orbits_to_skip > 0:
         var_quantum -= num_orbits_to_skip
-        orbit_radius = (screen_height / 25) * var_quantum ** 2
+        orbit_radius = (screen_height / 50) * var_quantum ** 2
         energia_electron = -13.6 / var_quantum ** 2
         val_frequency = np.abs(energia_electron - energia_electron0) / const_h
         var_lambda = (3 * 10 ** 8) / val_frequency
@@ -150,7 +150,7 @@ def get_circle_coordinates(center_x, center_y, radius, num_points=100):
 
 # Variables para la órbita
 # El orbit_radius 50 es para n = 1
-orbit_radius = (screen_height / 25) * var_quantum ** 2
+orbit_radius = (screen_height / 50) * var_quantum ** 2
 angle = 0
 
 button_width, button_height = 150, 50
@@ -163,8 +163,9 @@ minus_button = Button(button_x, button_y_bottom, button_width, button_height, "-
 # Esfera en el centro
 center_x = screen_width // 2
 center_y = screen_height // 2
-radius = [screen_height / 25, (4 * screen_height) / 25, (9 * screen_height) / 25, (16 * screen_height) / 25]
-center_sphere = Sphere(center_x, center_y, 15, RED)
+radius = [screen_height / 50, (4 * screen_height) / 50, (9 * screen_height) / 50, (16 * screen_height) / 50,
+          (25 * screen_height) / 50, (36 * screen_height) / 50]
+center_sphere = Sphere(center_x, center_y, 10, RED)
 circle_coordinates = []
 for i in radius:
     circle_coordinates.append(get_circle_coordinates(center_x, center_y, i))
@@ -181,6 +182,14 @@ while running:
             sys.exit()
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_q:
             running = False
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+            num_orbits_to_skip = 1
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
+            num_orbits_to_skip = 2
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_3:
+            num_orbits_to_skip = 3
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_4:
+            num_orbits_to_skip = 4
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # Left mouse button
                 plus_button.handle_click()
@@ -190,13 +199,21 @@ while running:
     orbit_x, orbit_y = get_orbit_coordinates(center_x, center_y, orbit_radius, angle)
 
     # Draw atomo
-    screen.fill(background_color)
+    screen.fill(WHITE)
     center_sphere.draw()
     plus_button.draw()
     minus_button.draw()
     pygame.draw.circle(screen, BLUE, (orbit_x, orbit_y), 3)
     for coordinate in circle_coordinates:
         pygame.draw.lines(screen, BLACK, False, coordinate, 1)
+
+    square_size = 50
+    square_x = screen_width - square_size
+    square_y = screen_height - square_size
+
+    # Dibujar el cuadrado azul con borde negro
+    pygame.draw.rect(screen, background_color, (square_x, square_y, square_size, square_size))
+    pygame.draw.rect(screen, BLACK, (square_x, square_y, square_size, square_size), 2)
 
     # Actualizar el ángulo para hacer que la esfera gire
     # El ángulo 0.5 es para n = 1
