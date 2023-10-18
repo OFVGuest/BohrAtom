@@ -170,6 +170,7 @@ center_sphere = Sphere(center_x, center_y, 10, RED)
 circle_coordinates = []
 # endregion
 
+
 # region bucleFor
 for i in radius:
     circle_coordinates.append(get_circle_coordinates(center_x, center_y, i))
