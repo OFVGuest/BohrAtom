@@ -3,6 +3,7 @@ import pygame
 import math
 import numpy as np
 
+
 # region Global variables
 const_h = 4.13566 * 10 ** (-15)
 var_lambda = 600
@@ -13,12 +14,14 @@ energia_electron = -13.6 / var_quantum ** 2
 num_orbits_to_skip = 1
 # endregion
 
+
 # region screenConfig
 pygame.init()
 screen_width, screen_height = 1280, 720
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Bohr\'s mind')
 # endregion
+
 
 # region GlobalColors
 WHITE = (255, 255, 255)
@@ -28,9 +31,8 @@ BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 CYAN = (0, 255, 255)
 PURPLE = (255, 0, 255)
-
-
 # endregion
+
 
 # region Class
 class Sphere:
@@ -60,12 +62,11 @@ class Button:
     def handle_click(self):
         if self.rect.collidepoint(pygame.mouse.get_pos()):
             self.callback()
-
-
 # endregion
 
+
 # region functions definitions
-def hello_world():
+def high_level():
     global var_quantum, orbit_radius, energia_electron, energia_foton
     if var_quantum + num_orbits_to_skip < 7:
         var_quantum += num_orbits_to_skip
@@ -73,7 +74,7 @@ def hello_world():
         energia_electron = -13.6 / var_quantum ** 2
 
 
-def bye_world():
+def lower_level():
     global var_quantum, orbit_radius, energia_electron, energia_foton, val_frequency, var_lambda
     energia_electron0 = energia_electron
     if var_quantum - num_orbits_to_skip > 0:
@@ -129,8 +130,6 @@ def foton_calculator():
     tick_color = 50
 
 
-# endregion
-
 # Función para obtener las coordenadas de la esfera que gira alrededor de otra
 def get_orbit_coordinates(center_x, center_y, radius, angle):
     x = center_x + radius * math.cos(angle)
@@ -148,18 +147,20 @@ def get_circle_coordinates(center_x, center_y, radius, num_points=100):
     return circle_points
 
 
-# Variables para la órbita
-# El orbit_radius 50 es para n = 1
+# endregion
+
+
+# region initial
+# Orbit
 orbit_radius = (screen_height / 50) * var_quantum ** 2
 angle = 0
-
+# Buttons
 button_width, button_height = 150, 50
 button_x = 50
 button_y_top = 50
 button_y_bottom = 150
-plus_button = Button(button_x, button_y_top, button_width, button_height, "+", hello_world)
-minus_button = Button(button_x, button_y_bottom, button_width, button_height, "-", bye_world)
-
+plus_button = Button(button_x, button_y_top, button_width, button_height, "+", high_level)
+minus_button = Button(button_x, button_y_bottom, button_width, button_height, "-", lower_level)
 # Esfera en el centro
 center_x = screen_width // 2
 center_y = screen_height // 2
@@ -167,9 +168,11 @@ radius = [screen_height / 50, (4 * screen_height) / 50, (9 * screen_height) / 50
           (25 * screen_height) / 50, (36 * screen_height) / 50]
 center_sphere = Sphere(center_x, center_y, 10, RED)
 circle_coordinates = []
+# endregion
+
+# region bucleFor
 for i in radius:
     circle_coordinates.append(get_circle_coordinates(center_x, center_y, i))
-
 clock = pygame.time.Clock()
 running = True
 background_color = WHITE  # Color de fondo inicial
@@ -226,6 +229,8 @@ while running:
 
     pygame.display.flip()
     clock.tick(60)
+# endregion
+
 
 pygame.quit()
 sys.exit()
